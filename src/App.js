@@ -12,7 +12,7 @@ const CountryCards = () => {
     fetch("https://restcountries.com/v3.1/all")
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok"); // Handle non-200 responses
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
@@ -21,7 +21,8 @@ const CountryCards = () => {
         setLoading(false); // Stop loading when data is fetched
       })
       .catch((error) => {
-        setError(error.message); // Capture any error
+        console.error("Error fetching data: ", error.message); // Log error to the console
+        setError(error.message); // Capture error message
         setLoading(false); // Stop loading in case of error
       });
   }, []);
