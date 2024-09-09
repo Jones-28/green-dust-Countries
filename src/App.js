@@ -4,14 +4,35 @@ import "./App.css";
 
 const CountryCards = () => {
   const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
     // Fetching country data from the API
     fetch("https://restcountries.com/v3.1/all")
-      .then((response) => response.json())
-      .then((data) => setCountries(data))
-      .catch((error) => console.error("Error fetching country data:", error));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok"); // Handle non-200 responses
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCountries(data);
+        setLoading(false); // Stop loading when data is fetched
+      })
+      .catch((error) => {
+        setError(error.message); // Capture any error
+        setLoading(false); // Stop loading in case of error
+      });
   }, []);
+
+  if (loading) {
+    return <div className="container mt-4">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="container mt-4 text-danger">Error: {error}</div>;
+  }
 
   return (
     <div className="container mt-4">
